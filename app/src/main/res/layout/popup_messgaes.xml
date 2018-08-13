@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#dadada"
+        android:id="@+id/rel_Header">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/ll_firstRow"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Username: "
+                android:gravity="left"
+                android:textSize="15sp"
+                android:paddingTop="5dp"
+                android:paddingLeft="8dp"
+                android:paddingBottom="2dp"
+                android:textColor="#2f60df"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_UserName"
+                android:gravity="left"
+                android:textSize="15sp"
+                android:paddingTop="5dp"
+                android:paddingBottom="2dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="District: "
+                android:gravity="right"
+                android:layout_gravity="right"
+                android:textSize="15sp"
+                android:layout_marginLeft="10dp"
+                android:paddingTop="5dp"
+                android:paddingLeft="8dp"
+                android:paddingBottom="2dp"
+                android:textColor="#2f60df"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_District"
+                android:gravity="left"
+                android:layout_gravity="right"
+                android:textSize="15sp"
+                android:paddingTop="5dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingBottom="2dp"
+                android:textStyle="normal" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/ll_secondRow"
+            android:layout_below="@+id/ll_firstRow"
+            android:paddingTop="2dp"
+            android:paddingBottom="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Scheme: "
+                android:gravity="left"
+                android:textSize="15sp"
+                android:paddingTop="5dp"
+                android:paddingLeft="8dp"
+                android:paddingBottom="2dp"
+                android:textColor="#2f60df"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_schemeName"
+                android:gravity="left"
+                android:textSize="15sp"
+                android:paddingTop="5dp"
+                android:paddingBottom="2dp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rel_Header"
+        android:id="@+id/textMsg"
+        android:gravity="left"
+        android:textSize="14sp"
+        android:paddingTop="5dp"
+        android:paddingLeft="8dp"
+        android:paddingBottom="5dp"
+        android:textColor="#000000"
+        android:textStyle="normal" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Dismiss"
+        android:layout_below="@+id/textMsg"
+        android:id="@+id/btn_dismiss"/>
+
+</RelativeLayout>

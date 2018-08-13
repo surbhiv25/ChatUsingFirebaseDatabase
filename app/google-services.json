@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "596875548045",
+    "firebase_url": "https://politicalparty-adadb.firebaseio.com",
+    "project_id": "politicalparty-adadb",
+    "storage_bucket": "politicalparty-adadb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:596875548045:android:29763dd9fab00a29",
+        "android_client_info": {
+          "package_name": "com.ezeia.politicalparty"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "596875548045-dvif471nk83tn8p1p6c5150u2us5bo5c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ezeia.politicalparty",
+            "certificate_hash": "c18ae5152462642ae7e1b7c2aa14545bc2c20d0d"
+          }
+        },
+        {
+          "client_id": "596875548045-h296vh3ai9oh37me5vut6l2tbc1am5eo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqbxR2D4bRsfoQbs_wEoNicR4erY9T4Y0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "596875548045-h296vh3ai9oh37me5vut6l2tbc1am5eo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

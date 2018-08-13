@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:visibility="gone"
+        android:id="@+id/img_error" />
+    <!--app:srcCompat="@drawable/ic_signal_wifi_off_black_24dp"-->
+
+    <TextView
+        android:id="@+id/tv_error_heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ERROR" />
+
+    <!--style="@style/TextHeadingDark"-->
+    <TextView
+        android:id="@+id/tv_error_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="No Internet Connection" />
+        <!--style="@style/TextNormalLight"-->
+
+
+    <Button
+        android:id="@+id/tv_retry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="RETRY"
+        android:background="#909090"
+        android:textColor="@android:color/white" />
+
+</LinearLayout>
