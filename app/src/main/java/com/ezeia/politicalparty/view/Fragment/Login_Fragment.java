@@ -20,6 +20,7 @@ import com.ezeia.politicalparty.model.Error;
 import com.ezeia.politicalparty.model.login.LoginResponse;
 import com.ezeia.politicalparty.pref.Preferences;
 import com.ezeia.politicalparty.presenter.LoginPresenter;
+import com.ezeia.politicalparty.utils.CheckInternetConnection;
 import com.ezeia.politicalparty.utils.CustomToast;
 import com.ezeia.politicalparty.utils.Database;
 import com.ezeia.politicalparty.utils.Utils;
@@ -80,9 +81,7 @@ public class Login_Fragment extends Fragment implements OnClickListener,LoginVie
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.login_layout, container, false);
 
         Fabric.with(getActivity(), new Crashlytics());
@@ -122,7 +121,12 @@ public class Login_Fragment extends Fragment implements OnClickListener,LoginVie
             e.printStackTrace();
         }
 
-        Utils.callFirebaseToSaveData(getActivity());
+        if(CheckInternetConnection.isNetworkAvailable(getActivity())){
+            Utils.callFirebaseToSaveData(getActivity());
+        }else{
+            Toast.makeText(getActivity(), "Please ensure internet connection.", Toast.LENGTH_LONG).show();
+        }
+
         //Utils.callFirebaseToSaveGroups(getActivity());
     }
 
@@ -207,8 +211,13 @@ public class Login_Fragment extends Fragment implements OnClickListener,LoginVie
                 scheme = hmapDetails.split(Pattern.quote("^"))[3];
                 role = hmapDetails.split(Pattern.quote("^"))[4];
 
-                Toast.makeText(getActivity().getApplicationContext(),"Login Succesful",Toast.LENGTH_SHORT).show();
-                callFirebase();
+                //Toast.makeText(getActivity().getApplicationContext(),"Login Succesful",Toast.LENGTH_SHORT).show();
+                if(CheckInternetConnection.isNetworkAvailable(getActivity())){
+                    callFirebase();
+                }else{
+                    Toast.makeText(getActivity(), "Please ensure internet connection.", Toast.LENGTH_LONG).show();
+                }
+
             }else {
                 new CustomToast().Show_Toast(getActivity(), view,
                         "Invalid Username or password.");
@@ -230,19 +239,30 @@ public class Login_Fragment extends Fragment implements OnClickListener,LoginVie
                 jsonBody.put("device_id", Preferences.getDeviceToken(getActivity()));
                 final String requestBody = jsonBody.toString();
 
+                final ProgressDialog pd = new ProgressDialog(getActivity());
+                pd.setMessage("Loading...");
+                pd.show();
+
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         if (response.equals("200")) {
+                            pd.dismiss();
                             Intent intent = new Intent(getActivity(), TabsActivity.class);
                             startActivity(intent);
                             getActivity().finish();
+                        }
+                        if(pd.isShowing()){
+                            pd.dismiss();
                         }
                     }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.e("VOLLEY", error.toString());
+                        if(pd.isShowing()){
+                            pd.dismiss();
+                        }
                         Toast.makeText(getActivity().getApplicationContext(), "Sorry,some error occured.Please try again.", Toast.LENGTH_SHORT).show();
                     }
                 }) {
@@ -329,14 +349,19 @@ public class Login_Fragment extends Fragment implements OnClickListener,LoginVie
                         firebaseUser.append(finalUser);
                     }
                     reference.child(firebaseUser.toString()).child("password").setValue(finalPass);
-                    Toast.makeText(getActivity(), "login successful", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getActivity(), "login successful", Toast.LENGTH_LONG).show();
 
                     Preferences.setUsername(getActivity(),firebaseUser.toString());
                     Preferences.setDistrict(getActivity(),district);
                     Preferences.setScheme(getActivity(),scheme);
                     Preferences.setRole(getActivity(),role);
 
-                    createVolleyRequest();
+                    if(CheckInternetConnection.isNetworkAvailable(getActivity())){
+                        createVolleyRequest();
+                    }else{
+                        Toast.makeText(getActivity(), "Please ensure internet connection.", Toast.LENGTH_LONG).show();
+                    }
+
                 }
                 else{
                     try {
@@ -359,7 +384,11 @@ public class Login_Fragment extends Fragment implements OnClickListener,LoginVie
                             Preferences.setScheme(getActivity(),scheme);
                             Preferences.setRole(getActivity(),role);
 
-                           createVolleyRequest();
+                            if(CheckInternetConnection.isNetworkAvailable(getActivity())){
+                                createVolleyRequest();
+                            }else{
+                                Toast.makeText(getActivity(), "Please ensure internet connection.", Toast.LENGTH_LONG).show();
+                            }
                         }
                         else {
                             Toast.makeText(getActivity(), "incorrect password", Toast.LENGTH_LONG).show();

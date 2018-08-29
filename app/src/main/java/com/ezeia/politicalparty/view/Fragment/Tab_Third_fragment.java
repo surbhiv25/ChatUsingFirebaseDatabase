@@ -1,14 +1,19 @@
 package com.ezeia.politicalparty.view.Fragment;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Gravity;
@@ -38,6 +43,7 @@ import com.crashlytics.android.Crashlytics;
 import com.ezeia.politicalparty.R;
 import com.ezeia.politicalparty.chat.UserDetails;
 import com.ezeia.politicalparty.pref.Preferences;
+import com.ezeia.politicalparty.utils.CheckInternetConnection;
 import com.ezeia.politicalparty.utils.Database;
 import com.ezeia.politicalparty.utils.Utils;
 import com.firebase.client.ChildEventListener;
@@ -109,7 +115,7 @@ public class Tab_Third_fragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+        getActivity().setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         view = inflater.inflate(R.layout.activity_chat, container, false);
 
         if(getActivity() != null)
@@ -117,6 +123,13 @@ public class Tab_Third_fragment extends Fragment {
 
         initViews();
         return view;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setRetainInstance(true);
     }
 
     void initViews()
@@ -246,58 +259,63 @@ public class Tab_Third_fragment extends Fragment {
 
                 final ProgressDialog progressDialog = new ProgressDialog(getActivity());
                 progressDialog.setTitle("Uploading...");
+                progressDialog.setCanceledOnTouchOutside(false);
                 progressDialog.show();
 
-                final StorageReference ref = storageRef.child("images/"+ UUID.randomUUID().toString());
-                ref.putFile(filePath)
-                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                progressDialog.dismiss();
-                                //Toast.makeText(getActivity(), "Uploaded", Toast.LENGTH_SHORT).show();
-                                ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
-                                    public void onSuccess(Uri uri) {
+                if(CheckInternetConnection.isNetworkAvailable(getActivity())){
+                    final StorageReference ref = storageRef.child("images/"+ UUID.randomUUID().toString());
+                    ref.putFile(filePath)
+                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    progressDialog.dismiss();
+                                    //Toast.makeText(getActivity(), "Uploaded", Toast.LENGTH_SHORT).show();
+                                    ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri) {
 
-                                        Map<String, String> map = new HashMap<>();
-                                        map.put("message", uri.toString());
-                                        map.put("user", UserDetails.username.split(Pattern.quote("-"))[0]);
-                                        map.put("time", getCurrentTimeStamp());
-                                        reference1.push().setValue(map);
-                                        messageArea.setText("");
-                                    }
-                                });
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                progressDialog.dismiss();
-                                Toast.makeText(getActivity(), "Sorry some error occured.Please try again.", Toast.LENGTH_SHORT).show();
-                                Log.d("TAG",e.getMessage());
-                            }
-                        })
-                        .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                                double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
-                                        .getTotalByteCount());
-                                progressDialog.setMessage("Uploaded "+(int)progress+"%");
-                            }
-                        })
-                        .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    UploadTask.TaskSnapshot downloadUri = task.getResult();
-                                    //String uri = downloadUri.getMetadata().getPath();
-
-                                } else {
-                                    // Handle failures
-                                    // ...
+                                            Map<String, String> map = new HashMap<>();
+                                            map.put("message", uri.toString());
+                                            map.put("user", UserDetails.username.split(Pattern.quote("-"))[0]);
+                                            map.put("time", getCurrentTimeStamp());
+                                            reference1.push().setValue(map);
+                                            messageArea.setText("");
+                                        }
+                                    });
                                 }
-                            }
-                        });
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    progressDialog.dismiss();
+                                    Toast.makeText(getActivity(), "Sorry some error occured.Please try again.", Toast.LENGTH_SHORT).show();
+                                    Log.d("TAG",e.getMessage());
+                                }
+                            })
+                            .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                                    double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
+                                            .getTotalByteCount());
+                                    progressDialog.setMessage("Uploaded "+(int)progress+"%");
+                                }
+                            })
+                            .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        UploadTask.TaskSnapshot downloadUri = task.getResult();
+                                        //String uri = downloadUri.getMetadata().getPath();
+
+                                    } else {
+                                        // Handle failures
+                                        // ...
+                                    }
+                                }
+                            });
+                }else{
+                    Toast.makeText(getActivity().getApplicationContext(),"Please ensure internet connection.",Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
@@ -338,7 +356,7 @@ public class Tab_Third_fragment extends Fragment {
             storage = FirebaseStorage.getInstance(app);
             storageRef = storage.getReference();
 
-            reference1 = new Firebase("https://politicalparty-adadb.firebaseio.com/groups/");
+            //reference1 = new Firebase("https://politicalparty-adadb.firebaseio.com/groups/");
             if(Preferences.getRole(getActivity()).equals("User"))
             {
                 reference2 = new Firebase("https://politicalparty-adadb.firebaseio.com/groups/");
@@ -382,13 +400,13 @@ public class Tab_Third_fragment extends Fragment {
                             {
                                 if (message.contains("https://firebasestorage.googleapis.com/") || message.startsWith("content://")){
                                     AsyncGettingBitmapFromUrl sync = new AsyncGettingBitmapFromUrl();
-                                    sync.execute(message,timeStamp,"1");
+                                    sync.execute(message,timeStamp,"1","You: ");
                                 }else
                                     addMessageBox("You: \n" + message, 1,timeStamp);
                             } else{
                                 if (message.contains("https://firebasestorage.googleapis.com/") || message.startsWith("content://")){
                                     AsyncGettingBitmapFromUrl sync = new AsyncGettingBitmapFromUrl();
-                                    sync.execute(message,timeStamp,"2");
+                                    sync.execute(message,timeStamp,"2",userName);
                                 }else
                                     addMessageBox(userName + " -\n" + message, 2,timeStamp);
                             }
@@ -398,7 +416,7 @@ public class Tab_Third_fragment extends Fragment {
                             {
                                 if (message.contains("https://firebasestorage.googleapis.com/") || message.startsWith("content://")){
                                     AsyncGettingBitmapFromUrl sync = new AsyncGettingBitmapFromUrl();
-                                    sync.execute(message,timeStamp,"1");
+                                    sync.execute(message,timeStamp,"1","You: ");
                                 }else
                                     addMessageBox("You: \n" + message, 1,timeStamp);
                             }
@@ -406,13 +424,13 @@ public class Tab_Third_fragment extends Fragment {
                             if(userName.equals(UserDetails.username)){
                                 if (message.contains("https://firebasestorage.googleapis.com/") || message.startsWith("content://")){
                                     AsyncGettingBitmapFromUrl sync = new AsyncGettingBitmapFromUrl();
-                                    sync.execute(message,timeStamp,"1");
+                                    sync.execute(message,timeStamp,"1","You: ");
                                 }else
                                     addMessageBox("You: \n" + message, 1,timeStamp);
                             } else{
                                 if (message.contains("https://firebasestorage.googleapis.com/") || message.startsWith("content://")){
                                     AsyncGettingBitmapFromUrl sync = new AsyncGettingBitmapFromUrl();
-                                    sync.execute(message,timeStamp,"2");
+                                    sync.execute(message,timeStamp,"2",userName);
                                 }else
                                     addMessageBox(userName + " -\n" + message, 2,timeStamp);
                             }
@@ -458,7 +476,7 @@ public class Tab_Third_fragment extends Fragment {
 
                             if (message.contains("https://firebasestorage.googleapis.com/") || message.startsWith("content://")){
                                 AsyncGettingBitmapFromUrl sync = new AsyncGettingBitmapFromUrl();
-                                sync.execute(message,timeStamp,"2");
+                                sync.execute(message,timeStamp,"2",userName);
                             }else
                                 addMessageBox(userName + " -\n" + message, 2,timeStamp);
                         }
@@ -496,10 +514,19 @@ public class Tab_Third_fragment extends Fragment {
         return "";
     }
 
-    private class AsyncGettingBitmapFromUrl extends AsyncTask<String, Void, Bitmap> {
+    private class AsyncGettingBitmapFromUrl extends AsyncTask<String, Integer, Bitmap> {
 
         String timeStamp = "";
         String type = "";
+        String userName = "";
+        ProgressDialog dialog = null;
+
+        @Override
+        protected void onPreExecute() {
+           dialog = new ProgressDialog(getActivity());
+           dialog.setMessage("Loading image...");
+           dialog.setCancelable(false);
+        }
 
         @Override
         protected Bitmap doInBackground(String... params) {
@@ -508,6 +535,7 @@ public class Tab_Third_fragment extends Fragment {
             Bitmap myBitmap = null;
             timeStamp = params[1];
             type = params[2];
+            userName = params[3];
             //bitmap = AppMethods.downloadImage(params[0]);
             try {
                 URL url = new URL(params[0]);
@@ -523,12 +551,26 @@ public class Tab_Third_fragment extends Fragment {
             }
         }
 
+        /*@Override
+        protected void onProgressUpdate(Integer... percent) {
+            super.onProgressUpdate(percent);
+            if (mCallbacks != null) {
+                mCallbacks.onProgressUpdate(percent[0]);
+            }
+        }*/
+
         @Override
         protected void onPostExecute(Bitmap bitmap) {
 
+            if (dialog != null && dialog.isShowing()) {
+                dialog.dismiss();
+            }
+
             System.out.println("bitmap" + bitmap);
-            addImageBox(bitmap, Integer.parseInt(type),timeStamp);
+            addImageBox(bitmap, Integer.parseInt(type),timeStamp,userName);
             isImageLoading = false;
+
+
         }
     }
 
@@ -647,7 +689,8 @@ public class Tab_Third_fragment extends Fragment {
         }
     }
 
-    public void addImageBox(Bitmap message,int type, String timeStamp){
+    //add username with image also.
+    public void addImageBox(Bitmap message,int type, String timeStamp, String userName){
 
         if(getActivity() != null){
             LinearLayout linearLayout = new LinearLayout(getActivity());

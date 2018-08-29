@@ -15,7 +15,7 @@ import com.ezeia.politicalparty.view.Fragment.Tab_Third_fragment;
 
 import io.fabric.sdk.android.Fabric;
 
-public class TabsActivity extends AppCompatActivity {
+public class TabsActivity extends AppCompatActivity{
 
     private TabAdapter adapter;
     private TabLayout tabLayout;
@@ -33,8 +33,8 @@ public class TabsActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
         adapter = new TabAdapter(getSupportFragmentManager(),this);
-        adapter.addFragment(new Tab_First_fragment(), "Schemes",tabIcons[0]);
-        adapter.addFragment(new Tab_Second_fragment(), "Messages",tabIcons[1]);
+        adapter.addFragment(new Tab_First_fragment(), "P & D",tabIcons[0]);
+        adapter.addFragment(new Tab_Second_fragment(), "Message",tabIcons[1]);
         adapter.addFragment(new Tab_Third_fragment(), "Chat",tabIcons[2]);
 
         viewPager.setAdapter(adapter);
@@ -83,4 +83,5 @@ public class TabsActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
+
 }

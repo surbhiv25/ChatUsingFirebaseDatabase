@@ -5,8 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="40dp"
     android:background="@color/colorPrimary"
-    android:gravity="center"
     app:layout_collapseMode="pin"
     app:layout_scrollFlags="scroll|enterAlways"
-    app:theme="@style/MyToolbarTheme"
-    app:title="BJP Political Party"/>
+    app:theme="@style/MyToolbarTheme">
+
+    <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="BJP Political Party"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+    android:layout_gravity="center"
+    android:id="@+id/toolbar_title" />
+
+</android.support.v7.widget.Toolbar>

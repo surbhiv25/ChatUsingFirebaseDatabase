@@ -11,7 +11,7 @@
         android:layout_width="22dp"
         android:layout_height="22dp"
         android:layout_marginRight="2dp"
-        android:tint="@color/white" />
+        android:tint="@color/white"/>
 
     <TextView
         android:id="@+id/tabTextView"
