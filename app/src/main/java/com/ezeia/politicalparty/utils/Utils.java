@@ -26,7 +26,7 @@ public class Utils {
     //Email Validation pattern
     public static final String regEx = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
 
-    public static final String SERVER_KEY = "AAAAiviOFY0:APA91bF_-0HSGh2MpBm_yHePb2Coo2EnyKo91rdjCiS81Rx3N-LjeRBqM9Qa_k8izsWQmFP4uIfMpwTTnThPdk5uIow_Hl1hZ3Gc2tIqG1Mjhct_jgprg5R_sUB_3AZ_ayJV8XtWMXjUC4s06dPk-wGqXrB4PbNkrg";
+    public static final String SERVER_KEY = "Your firebase server key";
     //Fragments Tags
     public static final String Login_Fragment = "Login_Fragment";
     public static final String SignUp_Fragment = "SignUp_Fragment";
