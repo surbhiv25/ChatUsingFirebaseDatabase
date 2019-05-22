@@ -91,12 +91,8 @@ public class Tab_Third_fragment extends Fragment {
     boolean isImageFitToScreen = false;
 
     View view;
-    ListView usersList;
-    TextView noUsersText;
     ArrayList<String> al = new ArrayList<>();
-    int totalUsers = 0;
     ProgressDialog pd;
-
     LinearLayout layout;
     RelativeLayout layout_2;
     ImageView sendButton,sendImage;
